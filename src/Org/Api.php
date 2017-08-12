@@ -24,14 +24,9 @@ class Api extends \FernleafSystems\Apis\Base\BaseApi {
 	 * @return string
 	 */
 	public function getBaseUrl() {
-		return rtrim( $this->getConnection()->getBaseUrl(), '/' ) . '/';
-	}
-
-	/**
-	 * @return Connection
-	 */
-	public function getConnection() {
-		return parent::getConnection();
+		/** @var Connection $oCon */
+		$oCon = $this->getConnection();
+		return rtrim( $oCon->getBaseUrl(), '/' ) . '/';
 	}
 
 	/**
