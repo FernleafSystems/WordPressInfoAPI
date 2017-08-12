@@ -11,7 +11,8 @@ use FernleafSystems\Apis\Wordpress\Org\Api;
 class Search extends Api {
 
 	const API_ACTION = 'query_plugins';
-	const API_VERSION = '1.1';
+	const API_VERSION = '1.0';
+	const REQUEST_METHOD = 'post'; // in this case it could be either
 
 	/**
 	 * @return PluginInfoVO[]
@@ -21,24 +22,35 @@ class Search extends Api {
 
 		$nPage = 1;
 		do {
-			$aResults = $this->setRequestDataItem( 'page', $nPage++ )
-							 ->setRequestDataItem( 'per_page', 100 )
+			$oResults = $this->setRequestDataItem( 'page', $nPage++ )
+							 ->setRequestDataItem( 'per_page', 25 )
 							 ->send()
 							 ->getDecodedResponseBody();
 
-			$bHasResults = !empty( $aResults );
+			$bHasResults = !empty( $oResults->plugins );
 			if ( $bHasResults ) {
-				$aResults = array_map(
+				$oResults = array_map(
 					function ( $aMember ) {
 						return ( new PluginInfoVO() )->applyFromArray( $aMember );
 					},
-					$aResults
+					$oResults->plugins
 				);
-				$aAllResults = array_merge( $aAllResults, $aResults );
+				$aAllResults = array_merge( $aAllResults, $oResults );
 			}
 		} while ( $bHasResults && ( count( $aAllResults ) < $this->getResultsLimit() ) );
-
+		var_dump( count( $aAllResults ) );
 		return $aAllResults;
+	}
+
+	/**
+	 * @return \stdClass
+	 */
+	public function getDecodedResponseBody() {
+		$oResponse = new \stdClass();
+		if ( !$this->hasError() ) {
+			$oResponse = unserialize( $this->getResponseBodyContentRaw() );
+		}
+		return $oResponse;
 	}
 
 	/**
@@ -72,6 +84,6 @@ class Search extends Api {
 	 * @return string
 	 */
 	protected function getUrlEndpoint() {
-		return sprintf( '%s/info/%s', $this->getContext(), $this->getVersion() );
+		return sprintf( '/%s/info/%s/', $this->getContext(), $this->getVersion() );
 	}
 }

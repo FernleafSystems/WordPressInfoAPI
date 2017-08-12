@@ -33,14 +33,11 @@ class Api extends \FernleafSystems\Apis\Base\BaseApi {
 	 * @return array
 	 */
 	protected function prepFinalRequestData() {
-		$aPayload = array(
-			'action'  => $this->getAction(),
-			'request' => (object)$this->getRequestDataFinal(),
-		);
-
 		return array(
-			'headers' => $this->getRequestHeaders(),
-			'body'    => serialize( $aPayload )
+			'body' => array(
+				'action'  => $this->getAction(),
+				'request' => serialize( (object)$this->getRequestDataFinal() ),
+			)
 		);
 	}
 
