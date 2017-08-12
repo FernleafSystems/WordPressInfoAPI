@@ -15,7 +15,9 @@ trait Searcher {
 		$aAllResults = array();
 
 		$this->setIsSerializedResponse( true );
-		$this->setRequestDataItem( 'per_page', 25 );
+
+		$nLimit = $this->getResultsLimit();
+		$this->setRequestDataItem( 'per_page', min( $nLimit, 25 ) );
 
 		$nPage = 1;
 		do {
@@ -27,9 +29,9 @@ trait Searcher {
 			if ( $bHasResults ) {
 				$aAllResults = array_merge( $aAllResults, $oResults->{static::CONTEXT} );
 			}
-		} while ( $bHasResults && ( count( $aAllResults ) < $this->getResultsLimit() ) );
+		} while ( $bHasResults && ( count( $aAllResults ) < $nLimit ) );
 
-		return $aAllResults;
+		return array_slice( $aAllResults, 0, $nLimit );
 	}
 
 	/**
