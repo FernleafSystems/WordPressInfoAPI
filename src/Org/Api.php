@@ -9,11 +9,6 @@ class Api extends \FernleafSystems\Apis\Base\BaseApi {
 	const API_VERSION = '1.0';
 
 	/**
-	 * @var string
-	 */
-	protected $sContext;
-
-	/**
 	 * @return string
 	 */
 	public function getAction() {
@@ -27,6 +22,23 @@ class Api extends \FernleafSystems\Apis\Base\BaseApi {
 		/** @var Connection $oCon */
 		$oCon = $this->getConnection();
 		return rtrim( $oCon->getBaseUrl(), '/' ) . '/';
+	}
+
+	/**
+	 * @return array|\stdClass|null
+	 */
+	public function getDecodedResponseBody() {
+		$mResponse = null;
+		if ( $this->isSerializedResponse() ) {
+			$mResponse = new \stdClass();
+			if ( !$this->hasError() ) {
+				$mResponse = unserialize( $this->getResponseBodyContentRaw() );
+			}
+		}
+		else {
+			$mResponse = parent::getDecodedResponseBody();
+		}
+		return $mResponse;
 	}
 
 	/**
@@ -45,7 +57,8 @@ class Api extends \FernleafSystems\Apis\Base\BaseApi {
 	 * @return string
 	 */
 	public function getContext() {
-		return isset( $this->sContext ) ? $this->sContext : self::CONTEXT;
+		$sContext = $this->getParam( 'context' );
+		return empty( $sContext ) ? static::CONTEXT : $sContext;
 	}
 
 	/**
@@ -56,11 +69,25 @@ class Api extends \FernleafSystems\Apis\Base\BaseApi {
 	}
 
 	/**
+	 * @return bool
+	 */
+	public function isSerializedResponse() {
+		return (bool)$this->getParam( 'serialized_response' );
+	}
+
+	/**
 	 * @param string $sContext
 	 * @return $this
 	 */
 	public function setContext( $sContext ) {
-		$this->sContext = $sContext;
-		return $this;
+		return $this->setParam( 'context', $sContext );
+	}
+
+	/**
+	 * @param bool $bIsSerialized
+	 * @return $this
+	 */
+	public function setIsSerializedResponse( $bIsSerialized ) {
+		return $this->setParam( 'serialized_response', $bIsSerialized );
 	}
 }

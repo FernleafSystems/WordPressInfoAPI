@@ -3,6 +3,7 @@
 namespace FernleafSystems\Apis\Wordpress\Org\Plugins;
 
 use FernleafSystems\Apis\Wordpress\Org\Api;
+use FernleafSystems\Apis\Wordpress\Org\Common\InfoRetriever;
 
 /**
  * Class Info
@@ -11,7 +12,8 @@ use FernleafSystems\Apis\Wordpress\Org\Api;
 class Info extends Api {
 
 	const API_ACTION = 'plugin_information';
-	const REQUEST_METHOD = 'post'; // in this case it could be either
+
+	use InfoRetriever;
 
 	/**
 	 * @return PluginInfoVO|null
@@ -23,29 +25,6 @@ class Info extends Api {
 			$oPlugin = ( new PluginInfoVO() )->applyFromArray( $this->getDecodedResponseBody() );
 		}
 		return $oPlugin;
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getSlug() {
-		return $this->getRequestDataItem( 'slug' );
-	}
-
-	/**
-	 * @param string $sSlug
-	 * @return $this
-	 */
-	public function setSlug( $sSlug ) {
-		return $this->setRequestDataItem( 'slug', $sSlug );
-	}
-
-	/**
-	 * @param array $aFields
-	 * @return $this
-	 */
-	public function setFields( $aFields ) {
-		return $this->setRequestDataItem( 'fields', $aFields );
 	}
 
 	/**
