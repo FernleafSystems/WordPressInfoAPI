@@ -10,7 +10,6 @@ use FernleafSystems\Apis\Wordpress\Org\Common\InfoRetriever;
  */
 class Info extends Base {
 
-	const CONTEXT = 'themes';
 	const API_ACTION = 'theme_information';
 
 	use InfoRetriever;
