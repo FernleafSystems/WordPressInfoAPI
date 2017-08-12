@@ -14,10 +14,13 @@ class PluginInfoVO extends ThemeInfoVO {
 	}
 
 	/**
-	 * @return array associative where keys are version numbers, values are download URIs
+	 * @param int $nAccuracy - the number of decimal places
+	 * @return float
 	 */
-	public function getVersions() {
-		return $this->getArrayParam( 'versions' );
+	public function getNpsScore( $nAccuracy = 4 ) {
+		$aRs = $this->getRatings();
+		$nNPS = ( $aRs[ 5 ] - $aRs[ 1 ] - $aRs[ 2 ] - $aRs[ 3 ] ) / $this->getCountRatings();
+		return round( $nNPS, $nAccuracy );
 	}
 
 	/**
@@ -32,6 +35,13 @@ class PluginInfoVO extends ThemeInfoVO {
 	 */
 	public function getSection_ChangeLog() {
 		return $this->getSections()[ 'changelog' ];
+	}
+
+	/**
+	 * @return array associative where keys are version numbers, values are download URIs
+	 */
+	public function getVersions() {
+		return $this->getArrayParam( 'versions' );
 	}
 
 	/**
