@@ -1,0 +1,31 @@
+{
+  "name":         "fernleafsystems/apis/wordpress",
+  "authors":      [
+	{
+	  "name":     "Paul Goodchild",
+	  "email":    "paul@paulgoodchild.me",
+	  "homepage": "https://paulgoodchild.me"
+	}
+  ],
+  "repositories": [
+	{
+	  "type": "vcs",
+	  "url":  "https://github.com/FernleafSystems/Utilities.git"
+	},
+	{
+	  "type": "vcs",
+	  "url":  "https://github.com/FernleafSystems/Apis-Base"
+	}
+  ],
+  "require":      {
+	"fernleafsystems/utilities": "^1.0",
+	"fernleafsystems/apis/base": "dev-develop"
+  },
+  "require-dev":  {
+  },
+  "autoload":     {
+	"psr-4": {
+	  "FernleafSystems\\Apis\\Wordpress\\": "src"
+	}
+  }
+}
